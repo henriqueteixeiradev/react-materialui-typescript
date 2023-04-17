@@ -12,10 +12,12 @@ import { useDrawerContext } from "../hooks";
 type Props = {
   title: string;
   children: React.ReactNode;
+  toolbar?: React.ReactNode;
 };
 
-export function LayoutBasePage({ children, title }: Props) {
+export function LayoutBasePage({ children, title, toolbar }: Props) {
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+  const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
   const theme = useTheme();
 
   const { toogleDrawerOpen } = useDrawerContext();
@@ -32,10 +34,12 @@ export function LayoutBasePage({ children, title }: Props) {
       <Box
         sx={{
           padding: 1,
-          height: theme.spacing(12),
+          height: theme.spacing(smDown ? 6 : mdDown ? 8 : 12),
           display: "flex",
           alignItems: "center",
           gap: 1,
+          borderBottom: 1,
+          borderColor: theme.palette.divider,
         }}
       >
         {smDown && (
@@ -44,14 +48,23 @@ export function LayoutBasePage({ children, title }: Props) {
           </IconButton>
         )}
 
-        <Typography variant="h5" component="h1">
+        <Typography
+          variant={smDown ? "h5" : mdDown ? "h4" : "h3"}
+          sx={{
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+          }}
+        >
           {title}
         </Typography>
       </Box>
 
-      <Box>Barra de ferramentas</Box>
+      {toolbar && <Box>{toolbar}</Box>}
 
-      <Box>{children}</Box>
+      <Box flex={1} overflow="auto">
+        {children}
+      </Box>
     </Box>
   );
 }
