@@ -8,11 +8,12 @@ import {
   ListItemIcon,
   ListItemText,
   Theme,
+  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useDrawerContext } from "../../hooks";
+import { useAppThemeContext, useDrawerContext } from "../../hooks";
 import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 
 type Props = {
@@ -50,6 +51,8 @@ const ListItemLink = ({ label, icon, to, onClick }: IListItemLinkProps) => {
 export function MenuLateral({ children }: Props) {
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const theme = useTheme();
+
+  const { toogleTheme } = useAppThemeContext();
 
   const { isDrawerOpen, toogleDrawerOpen, drawerOptions } = useDrawerContext();
 
@@ -103,6 +106,23 @@ export function MenuLateral({ children }: Props) {
             </List>
           </Box>
         </Box>
+
+        <ListItemButton onClick={toogleTheme}>
+          <ListItemIcon>
+            <Icon>
+              {theme.palette.mode === "dark" ? "dark_mode" : "light_mode"}
+            </Icon>
+          </ListItemIcon>
+          <ListItemText
+            primary={
+              theme.palette.mode === "dark" ? (
+                <Typography variant="button">Modo escuro</Typography>
+              ) : (
+                <Typography variant="button">Modo claro</Typography>
+              )
+            }
+          />
+        </ListItemButton>
       </Drawer>
 
       <Box
