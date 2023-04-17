@@ -12,9 +12,38 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useDrawerContext } from "../../hooks";
+import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 
 type Props = {
   children: React.ReactNode;
+};
+
+type IListItemLinkProps = {
+  label: string;
+  icon: string;
+  to: string;
+  onClick?: (() => void) | undefined;
+};
+
+const ListItemLink = ({ label, icon, to, onClick }: IListItemLinkProps) => {
+  const navigate = useNavigate();
+
+  const resolvedPath = useResolvedPath(to);
+  const math = useMatch(resolvedPath.pathname);
+
+  const handleClick = () => {
+    onClick?.();
+    navigate(to);
+  };
+
+  return (
+    <ListItemButton selected={!!math} onClick={handleClick}>
+      <ListItemIcon>
+        <Icon>{icon}</Icon>
+      </ListItemIcon>
+      <ListItemText primary={label} />
+    </ListItemButton>
+  );
 };
 
 export function MenuLateral({ children }: Props) {
@@ -22,7 +51,7 @@ export function MenuLateral({ children }: Props) {
 
   const smDown = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { isDrawerOpen, toogleDrawerOpen } = useDrawerContext();
+  const { isDrawerOpen, toogleDrawerOpen, drawerOptions } = useDrawerContext();
 
   return (
     <>
@@ -62,12 +91,15 @@ export function MenuLateral({ children }: Props) {
 
           <Box sx={{ flex: "1" }}>
             <List component="nav">
-              <ListItemButton>
-                <ListItemIcon>
-                  <Icon>home</Icon>
-                </ListItemIcon>
-                <ListItemText primary="Página Inicial" />
-              </ListItemButton>
+              {drawerOptions.map((drawerOption) => (
+                <ListItemLink
+                  to={drawerOption.path}
+                  key={drawerOption.path}
+                  icon={drawerOption.icon}
+                  label={drawerOption.label}
+                  onClick={smDown ? toogleDrawerOpen : undefined}
+                />
+              ))}
             </List>
           </Box>
         </Box>
