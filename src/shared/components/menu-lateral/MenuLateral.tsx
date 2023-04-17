@@ -7,6 +7,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Theme,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -47,9 +48,8 @@ const ListItemLink = ({ label, icon, to, onClick }: IListItemLinkProps) => {
 };
 
 export function MenuLateral({ children }: Props) {
+  const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const theme = useTheme();
-
-  const smDown = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { isDrawerOpen, toogleDrawerOpen, drawerOptions } = useDrawerContext();
 
@@ -107,7 +107,7 @@ export function MenuLateral({ children }: Props) {
 
       <Box
         sx={{
-          height: "100vh",
+          height: "100%",
         }}
         marginLeft={smDown ? 0 : theme.spacing(28)}
       >
