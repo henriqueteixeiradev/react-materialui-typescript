@@ -7,9 +7,11 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import { useDrawerContext } from "../../hooks";
 
 type Props = {
   children: React.ReactNode;
@@ -18,9 +20,17 @@ type Props = {
 export function MenuLateral({ children }: Props) {
   const theme = useTheme();
 
+  const smDown = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { isDrawerOpen, toogleDrawerOpen } = useDrawerContext();
+
   return (
     <>
-      <Drawer variant="permanent">
+      <Drawer
+        open={isDrawerOpen}
+        variant={smDown ? "temporary" : "permanent"}
+        onClose={toogleDrawerOpen}
+      >
         <Box
           sx={{
             display: "flex",
@@ -66,8 +76,8 @@ export function MenuLateral({ children }: Props) {
       <Box
         sx={{
           height: "100vh",
-          marginLeft: theme.spacing(28),
         }}
+        marginLeft={smDown ? 0 : theme.spacing(28)}
       >
         {children}
       </Box>
